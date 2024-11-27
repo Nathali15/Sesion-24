@@ -1,0 +1,56 @@
+-- create a table
+CREATE TABLE Restaurantes (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL,
+    Ubicacion VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Comidas(
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL,
+    Tipo VARCHAR(50) NOT NULL,
+    Precio DECIMAL(10,2) NOT NULL,
+    Restaurante_ID INT,
+    FOREIGN KEY(Restaurante_ID) REFERENCES Restaurantes(id) ON DELETE CASCADE
+    
+);
+
+INSERT INTO Restaurantes(Nombre, Ubicacion)
+VALUES
+('La Cocina Italiana', 'Centro'),
+('Sabor Tropical', 'Norte'),
+('Delicias del Mar', 'Sur');
+
+INSERT INTO Comidas(Nombre, Tipo, Precio, Restaurante_ID)
+VALUES
+('Pizza Margarita', 'Italiana',20.50,1),
+('Lasaña carne', 'Italiana',20.50,1),
+('Arepa de queso', 'colombiana', 5.50, 2),
+('Cazuela de mariscos', 'mariscos',30.50,3),
+('Sancocho de pescado', 'Colombiano',18.50, 3);
+
+SELECT * FROM Restaurantes;
+SELECT * FROM Comidas;
+
+
+SELECT  Nombre, Tipo, precio
+FROM Comidas
+WHERE Precio > 20.00;
+
+SELECT Comidas.Nombre, Comidas.Tipo,Comidas.Precio
+FROM Comidas
+JOIN Restaurantes ON Comidas.Restaurante_ID = Restaurantes.ID
+WHERE Restaurantes.Nombre = 'Delicias del mar';
+
+SELECT Restaurantes.Nombre, COUNT(Comidas.ID) AS Cantidad_Comidas
+FROM Comidas
+JOIN Restaurantes ON Comidas.Restaurante_ID = Restaurantes.ID
+GROUP by Restaurantes.Nombre
+HAVING Cantidad_Comidas > 1;
+
+UPDATE  Comidas
+SET Tipo = 'Fusion'
+WHERE Nombre = 'Pizza Margarita';
+
+DELETE FROM Restaurantes
+WHERE Nombre ='Sabor Tropical';
